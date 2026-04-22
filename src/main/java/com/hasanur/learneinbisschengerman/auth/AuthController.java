@@ -2,8 +2,13 @@ package com.hasanur.learneinbisschengerman.auth;
 
 import com.hasanur.learneinbisschengerman.auth.Dtos.LoginRequest;
 import com.hasanur.learneinbisschengerman.auth.Dtos.LoginResponse;
+import com.hasanur.learneinbisschengerman.auth.Dtos.RefreshRequest;
+import com.hasanur.learneinbisschengerman.auth.Dtos.RefreshResponse;
+import com.hasanur.learneinbisschengerman.auth.service.AuthService;
+import com.hasanur.learneinbisschengerman.auth.service.RefreshTokenService;
 import com.hasanur.learneinbisschengerman.user.User;
 import com.hasanur.learneinbisschengerman.user.UserRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,37 +16,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
-    private final UserRepository userRepository;
+    private final AuthService authService;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, UserRepository userRepository) {
-        this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
-        this.userRepository = userRepository;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
-
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.email(),
-                        request.password()
-                )
-        );
-
-        User user = userRepository.findByEmail(request.email())
-                .orElseThrow();
-
-        String token = jwtUtil.generateToken(user);
-
-        return new LoginResponse(token);
+        return authService.login(request);
     }
 
-
+    @PostMapping("/refresh")
+    public RefreshResponse refresh(@RequestBody RefreshRequest request) {
+        return authService.refreshToken(request);
+    }
 }
