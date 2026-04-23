@@ -57,7 +57,7 @@ public class RefreshTokenService {
         return refreshToken;
     }
 
-
-
-
+    public void invalidateRefreshToken(String token) {
+        repository.findByToken(token).ifPresent(repository::delete);
+    }
 }

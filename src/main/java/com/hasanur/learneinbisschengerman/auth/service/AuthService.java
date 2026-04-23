@@ -2,6 +2,7 @@ package com.hasanur.learneinbisschengerman.auth.service;
 
 import com.hasanur.learneinbisschengerman.auth.Dtos.LoginRequest;
 import com.hasanur.learneinbisschengerman.auth.Dtos.LoginResponse;
+import com.hasanur.learneinbisschengerman.auth.Dtos.LogoutRequest;
 import com.hasanur.learneinbisschengerman.auth.Dtos.RefreshRequest;
 import com.hasanur.learneinbisschengerman.auth.Dtos.RefreshResponse;
 import com.hasanur.learneinbisschengerman.auth.JwtUtil;
@@ -19,7 +20,8 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
 
-    public AuthService(AuthenticationManager authenticationManager, UserRepository userRepository, JwtUtil jwtUtil, RefreshTokenService refreshTokenService) {
+    public AuthService(AuthenticationManager authenticationManager, UserRepository userRepository, JwtUtil jwtUtil,
+            RefreshTokenService refreshTokenService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
@@ -31,18 +33,15 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.email(),
-                        request.password()
-                )
-        );
+                        request.password()));
 
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow();
 
         String accessToken = jwtUtil.generateToken(user);
+        RefreshToken createdRefreshToken = refreshTokenService.createRefreshToken(request.email());
 
-        String refreshToken = String.valueOf(refreshTokenService.createRefreshToken(request.email()));
-
-        return new LoginResponse(accessToken, refreshToken);
+        return new LoginResponse(accessToken, createdRefreshToken.getToken());
     }
 
     public RefreshResponse refreshToken(RefreshRequest request) {
@@ -56,5 +55,8 @@ public class AuthService {
         return new RefreshResponse(newAccessToken, token.getToken());
     }
 
+    public void logout(LogoutRequest request) {
+        refreshTokenService.invalidateRefreshToken(request.refreshToken());
+    }
 
 }

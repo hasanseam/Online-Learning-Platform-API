@@ -2,14 +2,17 @@ package com.hasanur.learneinbisschengerman.auth;
 
 import com.hasanur.learneinbisschengerman.auth.Dtos.LoginRequest;
 import com.hasanur.learneinbisschengerman.auth.Dtos.LoginResponse;
+import com.hasanur.learneinbisschengerman.auth.Dtos.LogoutRequest;
 import com.hasanur.learneinbisschengerman.auth.Dtos.RefreshRequest;
 import com.hasanur.learneinbisschengerman.auth.Dtos.RefreshResponse;
 import com.hasanur.learneinbisschengerman.auth.service.AuthService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -29,5 +32,11 @@ public class AuthController {
     @PostMapping("/refresh")
     public RefreshResponse refresh(@RequestBody RefreshRequest request) {
         return authService.refreshToken(request);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, String>> logout(@RequestBody LogoutRequest request) {
+        authService.logout(request);
+        return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
     }
 }
