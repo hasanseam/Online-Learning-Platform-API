@@ -5,18 +5,11 @@ import com.hasanur.learneinbisschengerman.auth.Dtos.LoginResponse;
 import com.hasanur.learneinbisschengerman.auth.Dtos.RefreshRequest;
 import com.hasanur.learneinbisschengerman.auth.Dtos.RefreshResponse;
 import com.hasanur.learneinbisschengerman.auth.service.AuthService;
-import com.hasanur.learneinbisschengerman.auth.service.RefreshTokenService;
-import com.hasanur.learneinbisschengerman.user.User;
-import com.hasanur.learneinbisschengerman.user.UserRepository;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
