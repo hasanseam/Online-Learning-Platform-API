@@ -6,6 +6,7 @@ import com.hasanur.learneinbisschengerman.exceptions.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,7 +15,6 @@ import java.util.List;
 @RequestMapping("/courses")
 public class CourseController {
 
-
     private final CourseService courseService;
 
     public CourseController(CourseService courseService) {
@@ -22,6 +22,7 @@ public class CourseController {
     }
 
     // CREATE
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<CourseResponseDto> createCourse(@Valid @RequestBody CourseCreateDto dto) {
         CourseResponseDto course = courseService.createCourse(dto);
@@ -44,16 +45,17 @@ public class CourseController {
     }
 
     // UPDATE
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{courseId}")
     public ResponseEntity<CourseResponseDto> updateCourse(
             @PathVariable Long courseId,
-            @Valid @RequestBody CourseCreateDto dto
-    ) {
+            @Valid @RequestBody CourseCreateDto dto) {
         CourseResponseDto updated = courseService.updateCourse(courseId, dto);
         return ResponseEntity.ok(updated);
     }
 
     // DELETE
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{courseId}")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long courseId) {
         courseService.deleteCourse(courseId);

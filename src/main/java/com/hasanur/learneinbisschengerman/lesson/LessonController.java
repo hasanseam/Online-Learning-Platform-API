@@ -6,6 +6,7 @@ import com.hasanur.learneinbisschengerman.lesson.Dtos.LessonResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class LessonController {
         this.lessonService = lessonService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<LessonResponseDto> createLesson(@PathVariable Long courseId,
                                                           @RequestBody CreateLessonDto createLessonDto
@@ -48,6 +50,7 @@ public class LessonController {
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{lessonId}")
     public ResponseEntity<LessonResponseDto> updateLesson(
             @PathVariable Long courseId,
@@ -59,6 +62,7 @@ public class LessonController {
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{lessonId}")
     public ResponseEntity<Void> deleteLesson(
             @PathVariable Long courseId,
