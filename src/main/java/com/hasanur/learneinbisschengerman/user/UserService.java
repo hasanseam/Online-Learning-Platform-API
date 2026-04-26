@@ -17,12 +17,13 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserResponseDto register(UserRegisterDto dto){
-        if(userRepository.existsByEmail(dto.email())){
+    public UserResponseDto register(UserRegisterDto dto) {
+        if (userRepository.existsByEmail(dto.email())) {
             throw new IllegalArgumentException("Email Already Registered");
         }
 
         User user = User.builder()
+                .fullName(dto.fullName())
                 .email(dto.email())
                 .password(passwordEncoder.encode(dto.password()))
                 .role(Role.USER)
@@ -30,16 +31,15 @@ public class UserService {
                 .build();
         userRepository.save(user);
 
-        return new UserResponseDto(user.getId(), user.getEmail());
+        return new UserResponseDto(user.getId(), user.getFullName(), user.getEmail());
     }
 
     // READ ONE
-    public UserResponseDto getUser(Long id){
+    public UserResponseDto getUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("User not found"));
-        return new UserResponseDto(user.getId(), user.getEmail());
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return new UserResponseDto(user.getId(), user.getFullName(), user.getEmail());
     }
-
 
     // READ ALL
     public List<UserResponseDto> getAllUsers() {
@@ -49,16 +49,17 @@ public class UserService {
                 .toList();
     }
 
-    //UPDATE
+    // UPDATE
 
-    public UserResponseDto updateUser(Long id, UserRegisterDto dto){
+    public UserResponseDto updateUser(Long id, UserRegisterDto dto) {
         User user = userRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        if(!user.getEmail().equals(dto.email()) && userRepository.existsByEmail(dto.email())){
+        if (!user.getEmail().equals(dto.email()) && userRepository.existsByEmail(dto.email())) {
             throw new IllegalArgumentException("Email already in use");
         }
 
+        user.setFullName(dto.fullName());
         user.setEmail(dto.email());
         user.setPassword(passwordEncoder.encode(dto.password()));
 
@@ -75,6 +76,6 @@ public class UserService {
     }
 
     private UserResponseDto mapToDto(User user) {
-        return new UserResponseDto(user.getId(), user.getEmail());
+        return new UserResponseDto(user.getId(), user.getFullName(), user.getEmail());
     }
 }
