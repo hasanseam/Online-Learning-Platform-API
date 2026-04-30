@@ -21,17 +21,18 @@ public class Lesson {
     @Column(columnDefinition = "TEXT")
     private String contentText;
 
-    private String videoUrl;
+    @Column(nullable = true)
+    private String videoKey;
 
     @Column(nullable = false)
     private Integer orderNumber;
 
-    public Lesson(Long id, Course course, String title, String contentText, String videoUrl, Integer orderNumber) {
+    public Lesson(Long id, Course course, String title, String contentText, String videoKey, Integer orderNumber) {
         this.id = id;
         this.course = course;
         this.title = title;
         this.contentText = contentText;
-        this.videoUrl = videoUrl;
+        this.videoKey = videoKey;
         this.orderNumber = orderNumber;
     }
 
@@ -71,12 +72,12 @@ public class Lesson {
         this.contentText = contentText;
     }
 
-    public String getVideoUrl() {
-        return videoUrl;
+    public String getVideoKey() {
+        return videoKey;
     }
 
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
+    public void setVideoKey(String videoKey) {
+        this.videoKey = videoKey;
     }
 
     public Integer getOrderNumber() {
@@ -90,4 +91,3 @@ public class Lesson {
     public static interface LessonRepository {
     }
 }
-

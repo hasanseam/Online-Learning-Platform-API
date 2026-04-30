@@ -21,15 +21,14 @@ public class LessonService {
         this.courseService = courseService;
     }
 
-
-    public Lesson createLesson(Long courseId, CreateLessonDto createLessonDto){
+    public Lesson createLesson(Long courseId, CreateLessonDto createLessonDto) {
 
         Course course = courseService.getCourseOrThrow(courseId);
 
         Lesson lesson = new Lesson();
         lesson.setTitle(createLessonDto.title());
         lesson.setContentText(createLessonDto.contentText());
-        lesson.setVideoUrl(createLessonDto.videoUrl());
+        lesson.setVideoKey(createLessonDto.videoKey());
         lesson.setOrderNumber(createLessonDto.orderNumber());
 
         lesson.setCourse(course);
@@ -37,7 +36,7 @@ public class LessonService {
         return this.lessonRepository.save(lesson);
     }
 
-    public List<LessonResponseDto> getLessonsByCourse(Long courseId){
+    public List<LessonResponseDto> getLessonsByCourse(Long courseId) {
         // 1️⃣ Check if course exists
         if (!courseService.isCourseAvailable(courseId)) {
             throw new ResourceNotFoundException("Course is not found");
@@ -63,7 +62,7 @@ public class LessonService {
 
         lesson.setTitle(dto.title());
         lesson.setContentText(dto.contentText());
-        lesson.setVideoUrl(dto.videoUrl());
+        lesson.setVideoKey(dto.videoKey());
         lesson.setOrderNumber(dto.orderNumber());
 
         lessonRepository.save(lesson);
@@ -76,14 +75,24 @@ public class LessonService {
         lessonRepository.delete(lesson);
     }
 
+    // This method is used to attach a video to a lesson by setting the video key.
+    public void attachVideo(Long lessonId, String key) {
+
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new RuntimeException("Lesson not found"));
+
+        lesson.setVideoKey(key);
+
+        lessonRepository.save(lesson);
+    }
+
     public LessonResponseDto mapToDto(Lesson lesson) {
         return new LessonResponseDto(
                 lesson.getId(),
                 lesson.getTitle(),
                 lesson.getContentText(),
-                lesson.getVideoUrl(),
-                lesson.getOrderNumber()
-        );
+                lesson.getVideoKey(),
+                lesson.getOrderNumber());
     }
 
 }
