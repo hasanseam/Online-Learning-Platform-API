@@ -1,4 +1,4 @@
-package com.hasanur.learneinbisschengerman.lesson;
+package com.hasanur.learneinbisschengerman.video;
 
 import java.io.IOException;
 import java.util.UUID;

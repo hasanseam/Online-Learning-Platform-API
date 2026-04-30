@@ -88,6 +88,4 @@ public class Lesson {
         this.orderNumber = orderNumber;
     }
 
-    public static interface LessonRepository {
-    }
 }
