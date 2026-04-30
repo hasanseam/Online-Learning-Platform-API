@@ -31,14 +31,14 @@ public class UserService {
                 .build();
         userRepository.save(user);
 
-        return new UserResponseDto(user.getId(), user.getFullName(), user.getEmail());
+        return mapToDto(user);
     }
 
     // READ ONE
     public UserResponseDto getUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        return new UserResponseDto(user.getId(), user.getFullName(), user.getEmail());
+        return mapToDto(user);
     }
 
     // READ ALL
