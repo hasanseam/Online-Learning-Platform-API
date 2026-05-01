@@ -24,16 +24,20 @@ public class Lesson {
     @Column(nullable = true)
     private String videoKey;
 
+    @Column
+    private String videoStatus; // PROCESSING, READY, FAILED
+
     @Column(nullable = false)
     private Integer orderNumber;
 
-    public Lesson(Long id, Course course, String title, String contentText, String videoKey, Integer orderNumber) {
+    public Lesson(Long id, Course course, String title, String contentText, String videoKey, String videoStatus, Integer orderNumber) {
         this.id = id;
         this.course = course;
         this.title = title;
         this.contentText = contentText;
         this.videoKey = videoKey;
         this.orderNumber = orderNumber;
+        this.videoStatus = videoStatus;
     }
 
     public Lesson() {
@@ -79,6 +83,9 @@ public class Lesson {
     public void setVideoKey(String videoKey) {
         this.videoKey = videoKey;
     }
+
+    public String getVideoStatus(){return videoStatus;}
+    public void setVideoStatus(String videoStatus){this.videoStatus=videoStatus;}
 
     public Integer getOrderNumber() {
         return orderNumber;
