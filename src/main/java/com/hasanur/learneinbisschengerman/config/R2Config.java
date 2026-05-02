@@ -1,4 +1,4 @@
-package com.hasanur.learneinbisschengerman.lesson;
+package com.hasanur.learneinbisschengerman.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

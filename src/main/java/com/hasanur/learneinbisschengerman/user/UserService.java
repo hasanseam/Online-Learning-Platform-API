@@ -1,6 +1,9 @@
 package com.hasanur.learneinbisschengerman.user;
 
 import com.hasanur.learneinbisschengerman.exceptions.ResourceNotFoundException;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;

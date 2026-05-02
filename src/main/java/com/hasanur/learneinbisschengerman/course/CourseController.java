@@ -1,6 +1,5 @@
 package com.hasanur.learneinbisschengerman.course;
 
-import com.hasanur.learneinbisschengerman.course.CourseService;
 import com.hasanur.learneinbisschengerman.course.Dtos.CourseCreateDto;
 import com.hasanur.learneinbisschengerman.course.Dtos.CourseResponseDto;
 import com.hasanur.learneinbisschengerman.exceptions.ResourceNotFoundException;

@@ -3,7 +3,6 @@ package com.hasanur.learneinbisschengerman.course;
 import com.hasanur.learneinbisschengerman.course.Dtos.CourseCreateDto;
 import com.hasanur.learneinbisschengerman.course.Dtos.CourseResponseDto;
 import com.hasanur.learneinbisschengerman.exceptions.ResourceNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,6 @@ public class CourseService {
         this.courseRepository = courseRepository;
     }
 
-    // CREATE
     public CourseResponseDto createCourse(CourseCreateDto courseCreateDto) {
 
         Course course = new Course();
@@ -32,7 +30,6 @@ public class CourseService {
         return mapToDto(course);
     }
 
-    // READ ALL
     public List<CourseResponseDto> getCourses() {
         return courseRepository.findAll()
                 .stream()
@@ -40,21 +37,19 @@ public class CourseService {
                 .toList();
     }
 
-    // READ ONE
     public Optional<CourseResponseDto> getCourseById(Long courseId) {
         return courseRepository.findById(courseId).map(this::mapToDto);
     }
 
-    public boolean isCourseAvailable(Long courseId){
+    public boolean isCourseAvailable(Long courseId) {
         return courseRepository.existsById(courseId);
     }
 
     public Course getCourseOrThrow(Long id) {
         return courseRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Course not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
     }
 
-    // UPDATE
     public CourseResponseDto updateCourse(Long courseId, CourseCreateDto dto) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
@@ -75,13 +70,11 @@ public class CourseService {
         courseRepository.delete(course);
     }
 
-    // Helper method
     private CourseResponseDto mapToDto(Course course) {
         return new CourseResponseDto(
                 course.getId(),
                 course.getTitle(),
                 course.getDescription(),
-                course.getLevel()
-        );
+                course.getLevel());
     }
 }

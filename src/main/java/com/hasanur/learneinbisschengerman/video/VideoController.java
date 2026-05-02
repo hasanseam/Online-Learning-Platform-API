@@ -14,72 +14,67 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hasanur.learneinbisschengerman.lesson.Lesson;
-import com.hasanur.learneinbisschengerman.lesson.LessonRepository;
+import com.hasanur.learneinbisschengerman.lesson.LessonService;
 
 @RestController
 @RequestMapping("/courses/{courseId}/lessons/{lessonId}/video")
 public class VideoController {
 
-    // private final VideoService videoService;
-    private final VideoProcessingService videoProcessingService;
-    private final LessonRepository lessonRepository;
+        private final VideoProcessingService videoProcessingService;
+        private final LessonService lessonService;
+        private final VideoService videoService;
 
-    public VideoController(VideoProcessingService videoProcessingService, LessonRepository lessonRepository) {
-        this.videoProcessingService = videoProcessingService;
-        this.lessonRepository = lessonRepository;
-    }
+        public VideoController(VideoProcessingService videoProcessingService, VideoService videoService,
+                        LessonService lessonService) {
+                this.videoProcessingService = videoProcessingService;
+                this.lessonService = lessonService;
+                this.videoService = videoService;
+        }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping
-    public ResponseEntity<?> uploadVideo(
-            @PathVariable Long courseId,
-            @PathVariable Long lessonId,
-            @RequestParam("file") MultipartFile file) throws IOException {
+        @PreAuthorize("hasRole('ADMIN')")
+        @PostMapping
+        public ResponseEntity<?> uploadVideo(
+                        @PathVariable Long courseId,
+                        @PathVariable Long lessonId,
+                        @RequestParam("file") MultipartFile file) throws IOException {
 
-        Lesson lesson = lessonRepository
-                .findByIdAndCourseId(lessonId, courseId)
-                .orElseThrow(() -> new RuntimeException("Lesson not found"));
+                videoService.updateVideoStatus(lessonId, "PROCESSING");
 
-        lesson.setVideoStatus("PROCESSING");
-        lessonRepository.save(lesson);
+                Lesson lesson = lessonService.getLessonEntityById(courseId, lessonId);
 
-        videoProcessingService.processAsync(file, lesson);
+                videoProcessingService.processAsync(file, lesson);
 
-        return ResponseEntity.ok(Map.of(
-                "message", "Upload started",
-                "status", "PROCESSING"));
-    }
+                return ResponseEntity.ok(Map.of(
+                                "message", "Upload started",
+                                "status", "PROCESSING"));
+        }
 
-    @GetMapping("/status")
-    public ResponseEntity<Map<String, String>> getStatus(
-            @PathVariable Long courseId,
-            @PathVariable Long lessonId) {
-        System.out.println(System.getenv("PATH"));
-        Lesson lesson = lessonRepository
-                .findByIdAndCourseId(lessonId, courseId)
-                .orElseThrow(() -> new RuntimeException("Lesson not found"));
-        return ResponseEntity.ok(Map.of(
-                "status", lesson.getVideoStatus()));
-    }
+        @GetMapping("/status")
+        public ResponseEntity<Map<String, String>> getStatus(
+                        @PathVariable Long courseId,
+                        @PathVariable Long lessonId) {
+                return ResponseEntity.ok(Map.of(
+                                "status", videoService.getVideoStatus(lessonId)));
+        }
 
-    /*** Legacy upload mp4 in R2 storage */
-    /**
-     * @PreAuthorize("hasRole('ADMIN')")
-     * 
-     * @PostMapping
-     *              public ResponseEntity<Map<String, String>> uploadVideo(
-     * @PathVariable Long courseId,
-     * @PathVariable Long lessonId,
-     *               @RequestParam("file") MultipartFile file) throws IOException {
-     * 
-     *               String videoKey = videoService.uploadAndAttachVideo(
-     *               lessonId,
-     *               courseId,
-     *               file);
-     * 
-     *               return ResponseEntity.ok(Map.of(
-     *               "message", "Video uploaded successfully",
-     *               "videoKey", videoKey));
-     *               }
-     **/
+        /*** Legacy upload mp4 in R2 storage */
+        /**
+         * @PreAuthorize("hasRole('ADMIN')")
+         * 
+         * @PostMapping
+         *              public ResponseEntity<Map<String, String>> uploadVideo(
+         * @PathVariable Long courseId,
+         * @PathVariable Long lessonId,
+         *               @RequestParam("file") MultipartFile file) throws IOException {
+         * 
+         *               String videoKey = videoService.uploadAndAttachVideo(
+         *               lessonId,
+         *               courseId,
+         *               file);
+         * 
+         *               return ResponseEntity.ok(Map.of(
+         *               "message", "Video uploaded successfully",
+         *               "videoKey", videoKey));
+         *               }
+         **/
 }

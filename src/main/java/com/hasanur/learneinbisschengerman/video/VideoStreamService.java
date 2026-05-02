@@ -9,11 +9,13 @@ import org.springframework.http.ResponseEntity;
 import com.hasanur.learneinbisschengerman.lesson.Lesson;
 import com.hasanur.learneinbisschengerman.lesson.LessonRepository;
 
+import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
+@Service
 public class VideoStreamService {
     private final LessonRepository lessonRepository;
     private final S3Client s3Client;

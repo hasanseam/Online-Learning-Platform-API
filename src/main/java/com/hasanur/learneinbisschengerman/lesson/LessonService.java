@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 @Transactional
 public class LessonService {
-    public final LessonRepository lessonRepository;
+    private final LessonRepository lessonRepository;
     private final CourseService courseService;
 
     public LessonService(LessonRepository lessonRepository, CourseService courseService) {
@@ -21,7 +21,7 @@ public class LessonService {
         this.courseService = courseService;
     }
 
-    public Lesson createLesson(Long courseId, CreateLessonDto createLessonDto) {
+    public LessonResponseDto createLesson(Long courseId, CreateLessonDto createLessonDto) {
 
         Course course = courseService.getCourseOrThrow(courseId);
 
@@ -33,7 +33,9 @@ public class LessonService {
 
         lesson.setCourse(course);
 
-        return this.lessonRepository.save(lesson);
+        lessonRepository.save(lesson);
+
+        return mapToDto(lesson);
     }
 
     public List<LessonResponseDto> getLessonsByCourse(Long courseId) {
@@ -49,11 +51,16 @@ public class LessonService {
                 .toList();
     }
 
-    public LessonResponseDto getLessonById(Long courseId, Long lessonId) {
+    public LessonResponseDto getLessonDtoById(Long courseId, Long lessonId) {
         Lesson lesson = lessonRepository.findByIdAndCourseId(lessonId, courseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Lesson not found"));
 
         return mapToDto(lesson);
+    }
+
+    public Lesson getLessonEntityById(Long courseId, Long lessonId) {
+        return lessonRepository.findByIdAndCourseId(lessonId, courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Lesson not found"));
     }
 
     public LessonResponseDto updateLesson(Long courseId, Long lessonId, CreateLessonDto dto) {
@@ -73,17 +80,6 @@ public class LessonService {
         Lesson lesson = lessonRepository.findByIdAndCourseId(lessonId, courseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Lesson not found"));
         lessonRepository.delete(lesson);
-    }
-
-    // This method is used to attach a video to a lesson by setting the video key.
-    public void attachVideo(Long lessonId, String key) {
-
-        Lesson lesson = lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new RuntimeException("Lesson not found"));
-
-        lesson.setVideoKey(key);
-
-        lessonRepository.save(lesson);
     }
 
     public LessonResponseDto mapToDto(Lesson lesson) {

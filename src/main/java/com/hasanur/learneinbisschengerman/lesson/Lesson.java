@@ -2,7 +2,15 @@ package com.hasanur.learneinbisschengerman.lesson;
 
 import com.hasanur.learneinbisschengerman.course.Course;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "lesson")
 public class Lesson {
@@ -29,70 +37,4 @@ public class Lesson {
 
     @Column(nullable = false)
     private Integer orderNumber;
-
-    public Lesson(Long id, Course course, String title, String contentText, String videoKey, String videoStatus, Integer orderNumber) {
-        this.id = id;
-        this.course = course;
-        this.title = title;
-        this.contentText = contentText;
-        this.videoKey = videoKey;
-        this.orderNumber = orderNumber;
-        this.videoStatus = videoStatus;
-    }
-
-    public Lesson() {
-
-    }
-
-    public Course getCourse() {
-        return course;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContentText() {
-        return contentText;
-    }
-
-    public void setContentText(String contentText) {
-        this.contentText = contentText;
-    }
-
-    public String getVideoKey() {
-        return videoKey;
-    }
-
-    public void setVideoKey(String videoKey) {
-        this.videoKey = videoKey;
-    }
-
-    public String getVideoStatus(){return videoStatus;}
-    public void setVideoStatus(String videoStatus){this.videoStatus=videoStatus;}
-
-    public Integer getOrderNumber() {
-        return orderNumber;
-    }
-
-    public void setOrderNumber(Integer orderNumber) {
-        this.orderNumber = orderNumber;
-    }
-
 }
