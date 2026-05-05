@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
 @Entity
 @Table(name = "lesson_completion")
 @Data
@@ -17,8 +15,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class LessonCompletion {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

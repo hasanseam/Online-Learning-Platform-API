@@ -16,9 +16,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    // -------------------
-    // CREATE (Register)
-    // -------------------
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> register(
             @Valid @RequestBody UserRegisterDto dto
@@ -28,25 +25,16 @@ public class UserController {
                 .body(userService.register(dto));
     }
 
-    // -------------------
-    // READ ALL USERS
-    // -------------------
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    // -------------------
-    // READ SINGLE USER
-    // -------------------
     @GetMapping("/{userId}")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.getUser(userId));
     }
 
-    // -------------------
-    // UPDATE USER
-    // -------------------
     @PutMapping("/{userId}")
     public ResponseEntity<UserResponseDto> updateUser(
             @PathVariable Long userId,
@@ -55,9 +43,6 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(userId, dto));
     }
 
-    // -------------------
-    // DELETE USER
-    // -------------------
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);

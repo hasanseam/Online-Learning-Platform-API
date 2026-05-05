@@ -3,6 +3,8 @@ package com.hasanur.learneinbisschengerman.progress;
 import com.hasanur.learneinbisschengerman.user.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,10 +31,25 @@ public class ProgressController {
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
         Long userId = userDetails.getId();
 
-        // Fixed parameter order: userId, lessonId, courseId
         progressService.markLessonCompleted(userId, lessonId, courseId);
 
         return ResponseEntity.ok(Map.of("message", "Lesson completed"));
+    }
+
+    @GetMapping("/course/{courseId}")
+    public ResponseEntity<?> getProgress(
+            @PathVariable Long courseId,
+            Authentication auth
+    ) {
+
+        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+        Long userId = userDetails.getId();
+
+        double progress = progressService.getCourseProgress(userId, courseId);
+
+        return ResponseEntity.ok(Map.of(
+                "progress", progress
+        ));
     }
 
 }
